@@ -14,6 +14,12 @@ router.get(
   asyncHandler(auth.jwt),
   asyncHandler(user.get)
 );
+router.get(
+  "/all",
+  asyncHandler(auth.apikey),
+  asyncHandler(auth.jwt),
+  asyncHandler(user.getAll)
+);
 
 router.post(
   "/delete",

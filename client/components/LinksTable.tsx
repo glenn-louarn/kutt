@@ -15,7 +15,7 @@ import { useTheme } from "../hooks";
 import { removeProtocol, withComma, errorMessage } from "../utils";
 import { useStoreActions, useStoreState } from "../store";
 import { Link as LinkType } from "../store/links";
-import { Checkbox, TextInput } from "./Input";
+import { Checkbox, TextInput, Select } from "./Input";
 import { NavButton, Button } from "./Button";
 import { Col, RowCenter } from "./Layout";
 import Text, { H2, Span } from "./Text";
@@ -110,6 +110,7 @@ interface RowProps {
   index: number;
   link: LinkType;
   setDeleteModal: (number) => void;
+  setChangeOwnershipModal: (number) => void;
 }
 
 interface BanForm {
@@ -127,7 +128,7 @@ interface EditForm {
   searchable: Boolean;
 }
 
-const Row: FC<RowProps> = ({ index, link, setDeleteModal }) => {
+const Row: FC<RowProps> = ({ index, link, setDeleteModal, setChangeOwnershipModal }) => {
   const theme = useTheme()
   const { t } = useTranslation();
   const isAdmin = useStoreState(s => s.auth.isAdmin);
@@ -318,6 +319,13 @@ const Row: FC<RowProps> = ({ index, link, setDeleteModal }) => {
               </PieALink>
             </Link>
           )}
+          <Action
+            name="changeUser"
+            stroke="none"
+            fill={theme.icon.qrCode.main}
+            backgroundColor={theme.icon.qrCode.bg}
+            onClick={() => setChangeOwnershipModal(index)}
+          />
           <Action
             name="qrcode"
             stroke="none"
@@ -560,9 +568,13 @@ const LinksTable: FC = () => {
   const { t } = useTranslation();
   const isAdmin = useStoreState(s => s.auth.isAdmin);
   const links = useStoreState(s => s.links);
+  const users = useStoreState(s => s.users);
   const { get, remove } = useStoreActions(s => s.links);
+  const { getAll } = useStoreActions(s => s.users);
   const [tableMessage, setTableMessage] = useState("No links to show.");
   const [deleteModal, setDeleteModal] = useState(-1);
+  const [changeOwnershipModal, setChangeOwnershipModal] = useState(-1);
+  const [newOwner, setNewOwner] = useState("");
   const [deleteLoading, setDeleteLoading] = useState(false);
   const [deleteMessage, setDeleteMessage] = useMessage();
   const [formState, { label, checkbox, text }] = useFormState<Form>(
@@ -572,6 +584,12 @@ const LinksTable: FC = () => {
 
   const options = formState.values;
   const linkToDelete = links.items[deleteModal];
+  const linkToChangeOwnership = links.items[changeOwnershipModal];
+
+  useEffect( () => {
+    const res = getAll({ skip: "0", limit: "10"});
+  }, [changeOwnershipModal])
+
 
   useEffect(() => {
     get(options).catch(err =>
@@ -595,7 +613,18 @@ const LinksTable: FC = () => {
     }
     setDeleteLoading(false);
   };
-
+  const onChangeOwnership = async () => {
+    // setDeleteLoading(true);
+    try {
+      console.log("je change de owner")
+      // await remove(linkToDelete.id);
+      // await get(options);
+      setChangeOwnershipModal(-1);
+    } catch (err) {
+      setDeleteMessage(errorMessage(err));
+    }
+    // setDeleteLoading(false);
+  };
   const onNavChange = (nextPage: number) => () => {
     formState.setField("skip", (parseInt(options.skip) + nextPage).toString());
   };
@@ -710,6 +739,7 @@ const LinksTable: FC = () => {
                 {links.items.map((link, index) => (
                   <Row
                     setDeleteModal={setDeleteModal}
+                    setChangeOwnershipModal={setChangeOwnershipModal}
                     index={index}
                     link={link}
                     key={link.id}
@@ -722,6 +752,57 @@ const LinksTable: FC = () => {
           <Tr justifyContent="flex-end">{Nav}</Tr>
         </tfoot>
       </Table>
+      <Modal
+        id="change-ownership"
+        show={changeOwnershipModal > -1}
+        closeHandler={() => setChangeOwnershipModal(-1)}
+      >
+        {linkToChangeOwnership && (
+          <>
+            <H2 mb={24} textAlign="center" bold>
+              Change ownership
+            </H2>
+            <Text textAlign="center">Choose the new owner of this links :
+              <Span bold>{" "}"{removeProtocol(linkToChangeOwnership.link)}"</Span>?
+              <Select
+                  onChange= {(event) =>setNewOwner(event.target.value)} 
+                  options={ users.items.map(d => ({
+                    value: d.id,
+                    key: d.email
+                  }))}
+                  value={newOwner}></Select>
+              <TextInput placeholder="message..."></TextInput>
+            </Text>
+            <Flex justifyContent="center" mt={44}>
+              {deleteLoading ? (
+                <>
+                <Icon name="spinner" size={20} 
+                stroke={theme.components.spinner} />
+
+                </>
+              ) : deleteMessage.text ? (
+                <Text fontSize={15} color={deleteMessage.color}>
+                  {deleteMessage.text}
+                </Text>
+              ) : (
+                    <>
+                      <Button
+                        color="default"
+                        mr={3}
+                        onClick={() => setChangeOwnershipModal(-1)}
+                      >
+                        {t('button.cancel')}
+                      </Button>
+                      <Button color="warning" ml={3} onClick={onDelete}>
+                        <Icon name="trash" stroke="white" mr={2} />
+                        {t('button.delete')}
+                      </Button>
+                    </>
+                  )}
+            </Flex>
+          </>
+        )}
+      </Modal>
       <Modal
         id="delete-custom-domain"
         show={deleteModal > -1}

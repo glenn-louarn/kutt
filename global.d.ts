@@ -60,7 +60,14 @@ interface Host {
   created_at: string;
   updated_at: string;
 }
-
+interface LinkChangeOwner {
+  id: number;
+  owner: number;
+  newOwner: number;
+  link_id: number;
+  created_at: string;
+  updated_at: string;
+}
 interface IP {
   id: number;
   created_at: string;

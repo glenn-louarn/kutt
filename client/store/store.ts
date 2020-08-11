@@ -3,6 +3,7 @@ import { Action, createStore, createTypedHooks, action } from "easy-peasy";
 import { settings, Settings } from "./settings";
 import { loading, Loading } from "./loading";
 import { links, Links } from "./links";
+import { users, Users } from "./users";
 import { auth, Auth } from "./auth";
 
 export interface StoreModel {
@@ -11,6 +12,7 @@ export interface StoreModel {
   loading: Loading;
   settings: Settings;
   reset: Action;
+  users: Users;
 }
 
 let initState: any = {};
@@ -20,7 +22,8 @@ export const store: StoreModel = {
   links,
   loading,
   settings,
-  reset: action(() => initState)
+  reset: action(() => initState),
+  users
 };
 
 const typedHooks = createTypedHooks<StoreModel>();

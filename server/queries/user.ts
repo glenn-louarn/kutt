@@ -27,6 +27,18 @@ export const find = async (match: Partial<User>) => {
 
   return user;
 };
+interface GetParams {
+  limit: number;
+  search?: string;
+  skip: number;
+}
+export const getAll = async (params: GetParams) => {
+  const users = await knex<User>("users")
+    .offset(params.skip)
+    .limit(params.limit);
+
+  return users;
+};
 
 interface Add {
   email: string;
