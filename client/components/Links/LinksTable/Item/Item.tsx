@@ -1,17 +1,12 @@
 import formatDistanceToNow from "date-fns/formatDistanceToNow";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import React, { useState } from "react";
-import { Flex } from "reflexbox/styled-components";
-import styled from "styled-components";
-import { ifProp } from "styled-tools";
-import getConfig from "next/config";
 
 import differenceInMilliseconds from "date-fns/differenceInMilliseconds";
 import ms from "ms";
 
 import { useTheme } from "../../../../hooks";
 import { removeProtocol, withComma } from "../../../../utils";
-import { useStoreState } from "../../../../store";
 import { Link as LinkType } from "../../../../store/links";
 import { Col } from "../../../Layout";
 import Text from "../../../Text";
