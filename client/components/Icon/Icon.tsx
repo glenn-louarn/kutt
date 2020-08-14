@@ -23,7 +23,6 @@ import Plus from "./Plus";
 import Lock from "./Lock";
 import Eye from "./Eye";
 import ChangeUser from "./ChangeUser";
-import EyeSlash from "./EyeSlash";
 import Sun from "./Sun";
 import Moon from "./Moon";
 import Edit from "./Edit";
@@ -56,7 +55,6 @@ const icons = {
   spinner: Spinner,  
   eye: Eye,
   changeUser: ChangeUser,
-  eyeSlash: EyeSlash,  
   sun: Sun,
   moon: Moon,
   stop: Stop,
