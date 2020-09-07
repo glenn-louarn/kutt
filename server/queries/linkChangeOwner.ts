@@ -1,62 +1,63 @@
-// import * as redis from "../redis";
-// import knex from "../knex";
+import { CustomError } from "../utils";
+import knex from "../knex";
 
-// interface Add extends Partial<LinkChangeOwner> {
-//   address: string;
-// }
+//TODO remettre redis
+// const selectable = [
+//   "linkChangeOwner.id",
+//   "linkChangeOwner.created_at",
+//   "linkChangeOwner.domain_id",
+//   "linkChangeOwner.owner",
+//   "linkChangeOwner.newOwner",
+//   "linkChangeOwner.link_id",
+//   "linkChangeOwner.status"
+// ];
 
-// export const find = async (match: Partial<LinkChangeOwner>): Promise<LinkChangeOwner> => {
-//   if (match.address) {
-//     const cachedHost = await redis.get(redis.key.host(match.address));
-//     if (cachedHost) return JSON.parse(cachedHost);
-//   }
+interface Create {
+  owner: number;
+  newOwner: number;
+  link_id: number;
+  status: string;
+}
 
-//   const host = await knex<Domain>("hosts")
-//     .where(match)
-//     .first();
+export const create = async (params: Create) => {
+  const [linkChangeOwner]: LinkChangeOwner[] = await knex<LinkChangeOwner>(
+    "linkChangeOwner"
+  ).insert(
+    {
+      owner: params.owner,
+      newOwner: params.newOwner,
+      link_id: params.link_id,
+      status: params.status
+    },
+    "*"
+  );
+  return linkChangeOwner;
+};
 
-//   if (host) {
-//     redis.set(
-//       redis.key.host(host.address),
-//       JSON.stringify(host),
-//       "EX",
-//       60 * 60 * 6
-//     );
-//   }
+//TODO  A voir si on enleve
+export const remove = async (match: Partial<Link>) => {
+  const link = await knex<Link>("links")
+    .where(match)
+    .first();
 
-//   return host;
-// };
+  if (!link) {
+    throw new CustomError("Link was not found.");
+  }
 
-// export const add = async (params: Add) => {
-//   params.address = params.address.toLowerCase();
+  const deletedLink = await knex<Link>("links")
+    .where("id", link.id)
+    .delete();
 
-//   const exists = await knex<Domain>("domains")
-//     .where("address", params.address)
-//     .first();
+  return !!deletedLink;
+};
 
-//   const newHost = {
-//     address: params.address,
-//     banned: !!params.banned
-//   };
+export const update = async (
+  match: Partial<LinkChangeOwner>,
+  update: Partial<LinkChangeOwner>
+) => {
+  const links = await knex<LinkChangeOwner>("linkChangeOwner")
+    .where(match)
+    .update({ ...update, updated_at: new Date().toISOString() }, "*");
 
-//   let host: Host;
-//   if (exists) {
-//     const [response] = await knex<Host>("hosts")
-//       .where("id", exists.id)
-//       .update(
-//         {
-//           ...newHost,
-//           updated_at: params.updated_at || new Date().toISOString()
-//         },
-//         "*"
-//       );
-//     host = response;
-//   } else {
-//     const [response] = await knex<Host>("hosts").insert(newHost, "*");
-//     host = response;
-//   }
-
-//   redis.remove.host(host);
-
-//   return host;
-// };
+  return links;
+};

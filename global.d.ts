@@ -65,6 +65,7 @@ interface LinkChangeOwner {
   owner: number;
   newOwner: number;
   link_id: number;
+  status: string;
   created_at: string;
   updated_at: string;
 }
