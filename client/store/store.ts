@@ -5,6 +5,7 @@ import { loading, Loading } from "./loading";
 import { links, Links } from "./links";
 import { users, Users } from "./users";
 import { auth, Auth } from "./auth";
+import { linkChangeOwners, LinkChangeOwners} from "./linkChangeOwner";
 
 export interface StoreModel {
   auth: Auth;
@@ -13,6 +14,7 @@ export interface StoreModel {
   settings: Settings;
   reset: Action;
   users: Users;
+  linkChangeOwners: LinkChangeOwners;
 }
 
 let initState: any = {};
@@ -23,7 +25,8 @@ export const store: StoreModel = {
   loading,
   settings,
   reset: action(() => initState),
-  users
+  users,
+  linkChangeOwners
 };
 
 const typedHooks = createTypedHooks<StoreModel>();

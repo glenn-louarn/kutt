@@ -4,7 +4,7 @@ import cors from "cors";
 
 // import * as validators from "../handlers/validators";
 import * as helpers from "../handlers/helpers";
-import * as linkChangeOwner from "../handlers/linkChangeOwner";
+import * as linkChangeOwner from "../handlers/linkChangeOwners";
 import * as auth from "../handlers/auth";
 // import env from "../env";
 

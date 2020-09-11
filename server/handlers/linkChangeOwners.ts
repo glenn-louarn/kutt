@@ -1,5 +1,7 @@
 import { Handler } from "express";
 import query from "../queries";
+import knex from "../knex";
+import { CustomError } from "../utils";
 
 // export const get: Handler = async (req, res) => {
 //   const { limit, skip, search, all, searchable } = req.query;
@@ -25,16 +27,25 @@ import query from "../queries";
 //     data
 //   });
 // };
-
 export const create: Handler = async (req, res) => {
-  const { owner, newOwner, link_id } = req.body;
-
+  const { newOwner, link_id } = req.body;
   // Create new link
   const status = "onHold";
+  const owner = req.user.id;
+  if (owner === newOwner) {
+    console.log("meme user");
+    throw new CustomError("It is not possible to give a link to yourself.");
+  }
+  const link = await knex<Link>("links")
+    .where({ uuid: link_id })
+    .first();
+  if (owner !== link.user_id) {
+    throw new CustomError("You are not the owner of this link .");
+  }
   const linkChangeOwner = await query.linkChangeOwner.create({
     owner,
     newOwner,
-    link_id,
+    link_id: link.id,
     status
   });
 

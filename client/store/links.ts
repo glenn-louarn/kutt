@@ -4,6 +4,7 @@ import query from "query-string";
 
 import { getAxiosConfig } from "../utils";
 import { API, APIv2 } from "../consts";
+import Item from "../components/Links/LinksTable/Item/Item";
 
 export interface Link {
   id: string;

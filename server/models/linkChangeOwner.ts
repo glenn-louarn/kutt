@@ -1,10 +1,10 @@
 import * as Knex from "knex";
 
-export async function createLinkChangeOwnerTable(knex: Knex) {
-  const hasTable = await knex.schema.hasTable("linkChangeOwner");
+export async function createLinkChangeOwnersTable(knex: Knex) {
+  const hasTable = await knex.schema.hasTable("linkChangeOwners");
 
   if (!hasTable) {
-    await knex.schema.createTable("linkChangeOwner", table => {
+    await knex.schema.createTable("linkChangeOwners", table => {
       table.increments("id").primary();
       table
         .integer("owner")
@@ -19,10 +19,11 @@ export async function createLinkChangeOwnerTable(knex: Knex) {
       table
         .integer("link_id")
         .references("id")
-        .inTable("link");
+        .inTable("links")
+        .notNullable()
+        .onDelete("CASCADE");
       table
         .string("status") //onHold, accept, refuse
-        .unique()
         .notNullable();
       table.timestamps(false, true);
     });

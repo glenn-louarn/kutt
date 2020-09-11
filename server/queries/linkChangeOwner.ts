@@ -21,7 +21,7 @@ interface Create {
 
 export const create = async (params: Create) => {
   const [linkChangeOwner]: LinkChangeOwner[] = await knex<LinkChangeOwner>(
-    "linkChangeOwner"
+    "linkChangeOwners"
   ).insert(
     {
       owner: params.owner,

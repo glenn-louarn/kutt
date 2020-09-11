@@ -7,28 +7,28 @@ import { API, APIv2 } from "../consts";
 
 
 export interface User {
-    id: string;
-    email: string;
-  }
+  id: string;
+  email: string;
+}
 
-  
+
 export interface UsersListRes {
-    data: User[];
-    limit: number;
-    skip: number;
-  }
-  export interface UsersQuery {
-    limit: string;
-    skip: string;
-  }
+  data: User[];
+  limit: number;
+  skip: number;
+}
+export interface UsersQuery {
+  limit: string;
+  skip: string;
+}
 
 export interface Users {
-    items: User[];
-    total: number;
-    loading: boolean;
-    getAll: Thunk<Users, UsersQuery>;
-    set: Action<Users, UsersListRes>;
-  }
+  items: User[];
+  total: number;
+  loading: boolean;
+  getAll: Thunk<Users, UsersQuery>;
+  set: Action<Users, UsersListRes>;
+}
 
 export const users: Users = {
   items: [],
