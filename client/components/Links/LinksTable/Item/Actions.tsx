@@ -12,7 +12,7 @@ import Tooltip from "../../../Tooltip";
 import ALink from "../../../ALink";
 import BanModal from "../../Modal/BanModal"
 import QRCodeModal from "../../Modal/QRCodeModal"
-import ChangeOwnerModal from "../../Modal/ChangeOwnerModal"
+import LinkTransfertModal from "../../Modal/LinkTransfertModal"
 import Action from "./Action"
 import { Td} from "../../../Table";
 
@@ -43,7 +43,7 @@ const Actions = ({
   const { t } = useTranslation();
   const [banModal, setBanModal] = useState(false);
   const [qrModal, setQRModal] = useState(false);
-  const [changeOwnerModal, setChangeOwnerModal] = useState(false);
+  const [linkTransfertModal, setLinkTransfertModal] = useState(false);
 
   const isAdmin = useStoreState(s => s.auth.isAdmin);
 
@@ -115,7 +115,7 @@ const Actions = ({
           stroke="none"
           fill={theme.icon.qrCode.main}
           backgroundColor={theme.icon.qrCode.bg}
-          onClick={() => setChangeOwnerModal(true)}
+          onClick={() => setLinkTransfertModal(true)}
         />
         <Action
           name="qrcode"
@@ -151,9 +151,9 @@ const Actions = ({
         />
       </Td>
 
-      <QRCodeModal link={link} showModal={qrModal} closeModal={setQRModal} />
-      <BanModal link={link} showModal={banModal} closeModal={setBanModal} />
-      <ChangeOwnerModal link={link} showModal={changeOwnerModal} closeModal={setChangeOwnerModal} />
+      <QRCodeModal link={link} showModal={qrModal} setModal={setQRModal} />
+      <BanModal link={link} showModal={banModal} setModal={setBanModal} />
+      <LinkTransfertModal link={link} showModal={linkTransfertModal} setModal={setLinkTransfertModal} />
     </>
   );
 };

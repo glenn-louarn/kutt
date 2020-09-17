@@ -42,14 +42,11 @@ interface Domain {
 
 interface DomainSanitized {
   id: string;
-  uuid: undefined;
   address: string;
   banned: boolean;
-  banned_by_id?: undefined;
   created_at: string;
   homepage?: string;
   updated_at: string;
-  user_id?: undefined;
 }
 
 interface Host {
@@ -60,14 +57,34 @@ interface Host {
   created_at: string;
   updated_at: string;
 }
-interface LinkChangeOwner {
+interface LinkTransfert {
   id: number;
-  owner: number;
-  newOwner: number;
+  receiver_id: number;
+  sender_id: number;
   link_id: number;
+  type: string;
   status: string;
   created_at: string;
   updated_at: string;
+  receiver_delete: boolean;
+  sender_delete: boolean;
+}
+interface LinkTransfertJoinedUserAndTarget extends LinkTransfert {
+  target?: string;
+  receiver_email?: string;
+  sender_email?: string;
+}
+interface LinkTransfertSanitized {
+  id: number;
+  receiver_id: number;
+  sender_id: number;
+  link_id: number;
+  type: string;
+  status: string;
+  target?: string;
+  receiver_email?: string;
+  sender_email?: string;
+
 }
 interface IP {
   id: number;
@@ -96,17 +113,13 @@ interface Link {
 
 interface LinkSanitized {
   address: string;
-  banned_by_id?: undefined;
   banned: boolean;
   created_at: string;
-  domain_id?: undefined;
   id: string;
   link: string;
   password: boolean;
   target: string;
   updated_at: string;
-  user_id?: undefined;
-  uuid?: undefined;
   visit_count: number;
 }
 

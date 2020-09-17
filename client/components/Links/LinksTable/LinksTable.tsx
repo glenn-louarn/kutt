@@ -69,7 +69,7 @@ const LinksTable = ({
       <DeleteModal 
         link={linkToDelete} 
         showModal={deleteModal} 
-        closeModal={setDeleteModal} 
+        setModal={setDeleteModal} 
         loading={deleteLoading} 
         message={deleteMessage} 
         onDelete={onDelete}

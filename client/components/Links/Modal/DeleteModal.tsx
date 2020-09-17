@@ -14,7 +14,7 @@ import { Button } from "../../Button";
 type Props = {
   link: LinkType;
   showModal: number;
-  closeModal: Function;
+  setModal: Function;
   loading: Boolean;
   message: { text: string, color: string };
   onDelete: Function;
@@ -22,7 +22,7 @@ type Props = {
 const DeleteLink = ({
   link,
   showModal,
-  closeModal,
+  setModal,
   loading,
   message,
   onDelete
@@ -35,7 +35,7 @@ const DeleteLink = ({
     <Modal
       id="delete-custom-domain"
       show={showModal > -1}
-      closeHandler={() => closeModal(-1)}
+      closeHandler={() => setModal(-1)}
     >
       {link && (
         <>
@@ -62,7 +62,7 @@ const DeleteLink = ({
                     <Button
                       color="default"
                       mr={3}
-                      onClick={() => closeModal(-1)}
+                      onClick={() => setModal(-1)}
                     >
                       {t('button.cancel')}
                     </Button>

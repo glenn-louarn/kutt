@@ -56,7 +56,7 @@ const Container = styled(Col) <ContainerProps>`
   @media screen and (min-width: 52em) {
     letter-spacing: 0.1em;
     border-bottom-width: ${prop("bbw", "6px")};
-  }
+  };
 ￼`;
 
 interface LinksContainerProps extends BoxProps {

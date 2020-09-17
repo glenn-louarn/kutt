@@ -46,6 +46,8 @@ export const settings: Settings = {
   apikey: null,
   fetched: false,
   getSettings: thunk(async (actions, payload, { getStoreActions }) => {
+
+    console.log("settings getAxiosConfig()=====++++123+> ",getAxiosConfig())
     getStoreActions().loading.show();
     const res = await axios.get(APIv2.Users, getAxiosConfig());
     actions.setSettings(res.data);

@@ -11,11 +11,16 @@ import styled from 'styled-components'
 import { initGA, logPageView } from "../helpers/analytics";
 import { initializeStore } from "../store";
 import { TokenPayload } from "../types";
-import AppWrapper from "../components/AppWrapper";
-import { theme } from "../consts/theme";
-import  i18n  from '../../i18n'
+import i18n from '../../i18n'
 import ThemeProvider from '../components/ThemeProvider'
+import { linkTransferts, LinkTransfertRes } from '../store/linkTransferts'
+
 const isProd = process.env.NODE_ENV === "production";
+
+import { API, APIv2 } from "../consts";
+import axios from "axios";
+import { getAxiosConfig } from "../utils";
+
 const { publicRuntimeConfig } = getConfig();
 
 
@@ -29,6 +34,9 @@ const PageWrapper = styled.div`
 class MyApp extends App<any> {
   static async getInitialProps({ Component, ctx }: AppContext) {
     const store = initializeStore();
+    const actions = store.getActions()
+
+
     ctx.store = store;
 
     let pageProps = {};
@@ -43,8 +51,18 @@ class MyApp extends App<any> {
       ctx.req && (ctx.req as any).cookies && (ctx.req as any).cookies.darkModeEnabled === "true";
 
     if (tokenPayload) {
+
       store.dispatch.auth.add(tokenPayload);
+      const options = {
+        headers: {
+          Authorization: token
+        }
+      }
+      const res: LinkTransfertRes = await axios.get(`http://localhost:${process.env.PORT}${APIv2.LinkTransferts}`, options);
+      actions.linkTransferts.set(res)
     }
+
+
     return { pageProps, tokenPayload, initialState: store.getState(), darkModeEnabled };
 
   }
@@ -82,7 +100,7 @@ class MyApp extends App<any> {
   }
 
   render() {
-    const { i18n, Component, pageProps, darkModeEnabled } = this.props|| {};
+    const { i18n, Component, pageProps, darkModeEnabled } = this.props || {};
     return (
       <>
         <Head>

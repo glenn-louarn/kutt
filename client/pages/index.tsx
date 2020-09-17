@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback } from "react";
 import Router from "next/router";
 
 import { DISALLOW_ANONYMOUS_LINKS } from "../consts";
@@ -8,6 +8,7 @@ import LinksTable from "../components/Links/Links";
 import AppWrapper from "../components/AppWrapper";
 import Shortener from "../components/Shortener";
 import Features from "../components/Features";
+import RequestToLinkTransfert from "../components/RequestToLinkTransfert";
 import Footer from "../components/Footer";
 import { useStoreState } from "../store";
 
@@ -25,6 +26,7 @@ const Homepage = () => {
 
   return (
     <AppWrapper>
+      <RequestToLinkTransfert />
       <Shortener />
       {!isAuthenticated && <NeedToLogin />}
       {isAuthenticated && <LinksTable />}
@@ -34,5 +36,9 @@ const Homepage = () => {
     </AppWrapper>
   );
 };
+
+Homepage.getInitialProps = async () => {
+
+}
 
 export default Homepage;

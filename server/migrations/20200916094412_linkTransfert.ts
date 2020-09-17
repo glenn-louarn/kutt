@@ -2,9 +2,9 @@ import * as Knex from "knex";
 import * as models from "../models";
 
 export async function up(knex: Knex): Promise<any> {
-  const hasChangeOwners = await knex.schema.hasTable("linkChangeOwners");
-  if (!hasChangeOwners) {
-    await models.createLinkChangeOwnersTable(knex);
+  const hasLinkTransferts = await knex.schema.hasTable("linkTransferts");
+  if (!hasLinkTransferts) {
+    await models.createLinkTransfertTable(knex);
   }
 }
 

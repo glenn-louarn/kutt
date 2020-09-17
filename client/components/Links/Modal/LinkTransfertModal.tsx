@@ -1,14 +1,13 @@
 import React, { FC, useState, useEffect } from "react";
 
 import { useMessage, useTheme } from "../../../hooks";
-import { removeProtocol, withComma, errorMessage } from "../../../utils";
+import { removeProtocol,  errorMessage } from "../../../utils";
 import { useStoreActions, useStoreState } from "../../../store";
 import { Link as LinkType } from "../../../store/links";
-import { Checkbox, TextInput, Select } from "../../Input";
+import {   Select } from "../../Input";
 import Text, { H2, Span } from "../../Text";
 import Modal from "../../Modal";
 import { useTranslation } from 'react-i18next';
-import { show } from "react-tooltip";
 import { Flex } from "reflexbox";
 import { Button } from "../../Button";
 import Icon from "../../Icon";
@@ -17,18 +16,18 @@ import Icon from "../../Icon";
 type Props = {
   link: LinkType;
   showModal: boolean;
-  closeModal: Function;
+  setModal: Function;
 }
-const ChangeOwnerModal = ({
+const LinkTransfertModal = ({
   link,
   showModal,
-  closeModal
+  setModal//TODO revoir le nom
 }: Props) => {
   const { getAll } = useStoreActions(s => s.users);
-  const { submit } = useStoreActions(s => s.linkChangeOwners);
+  const { submit } = useStoreActions(s => s.linkTransferts);
   const [loading, setLoading] = useState(false);
   const users = useStoreState(s => s.users);
-  const [newOwner, setNewOwner] = useState(0);
+  const [receiver, setReceiver] = useState(0);
   // const [message, setMessage] = useState("");
   const [message, setMessage] = useMessage();
 
@@ -39,15 +38,19 @@ const ChangeOwnerModal = ({
     if (showModal) {
       getAll({ skip: "0", limit: "10" });
     }
+    else {
+      setReceiver(0)
+      setMessage()
+    }
   }, [showModal])
 
-  const onChangeOwner = async () => {
+  const onTransfert = async () => {
     setLoading(true);
     try {
-      const res = await submit({ newOwner: newOwner, link_id: link.id })
+      const res = await submit({ type: "give",receiver_id: receiver, link_id: link.id })
       setMessage(res.message, "green");
       setTimeout(() => {
-        closeModal(false)
+        setModal(false)
         // setBanModal(false);
       }, 1500);
     } catch (err) {
@@ -55,30 +58,36 @@ const ChangeOwnerModal = ({
     }
     setLoading(false);
   }
-
   return (
     <Modal
       id="change-ownership"
       show={showModal}
-      closeHandler={() => closeModal(true)}
+      closeHandler={() => setModal(false)}
     >
       {link && (
         <>
-          <H2 mb={24} textAlign="center" bold>
+          <H2 mb={14} textAlign="center" bold>
             Change ownership
         </H2>
           <Text textAlign="center">Choose the new owner of this links :
           <Span bold>{" "}"{removeProtocol(link.link)}"</Span>?
-          <Select
-              onChange={(event) => { setNewOwner(parseInt(event.target.value, 10)); console.log("event.target =========++++++> ", event.target.value) }}
-              options={users.items.map(d => ({
-                value: d.id,
-                key: d.email
-              }))}
-              value={newOwner + ""}></Select>
-            {/* <TextInput placeholder="message..." onChange={(e) => setMessage(e.target.value)} value={message}></TextInput> */}
           </Text>
-          <Flex justifyContent="center" mt={44}>
+          <Flex justifyContent="center" mt={20}>
+          <Select
+            justifyContent="center"
+            pl={[3, 24]}
+            pr={[3, 24]}
+            fontSize={[14, 15]}
+            height={[32, 37]}
+            width={[180, 220]}
+            onChange={(event) => setReceiver(parseInt(event.target.value, 10))}
+            options={users.items.map(d => ({
+              value: d.id,
+              key: d.email
+            }))}
+            value={receiver + ""}/>
+            </Flex>
+          <Flex justifyContent="center" mt={25}>
             {loading ? (
               <>
                 <Icon name="spinner" size={20}
@@ -94,11 +103,11 @@ const ChangeOwnerModal = ({
                     <Button
                       color="default"
                       mr={3}
-                      onClick={() => closeModal(-1)}
+                      onClick={() => setModal(false)}
                     >
                       {t('button.cancel')}
                     </Button>
-                    <Button color="warning" ml={3} onClick={onChangeOwner}>
+                    <Button color="warning" ml={3} onClick={onTransfert}>
                       Change owner
                     </Button>
                   </>
@@ -110,4 +119,4 @@ const ChangeOwnerModal = ({
     </Modal >
   )
 }
-export default ChangeOwnerModal;
+export default LinkTransfertModal;

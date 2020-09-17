@@ -1,37 +1,59 @@
-version: "3"
+version: '3'
 
 services:
-  kutt:
-    image: kutt/kutt
-    depends_on:
-      - postgres
-      - redis
-    command: ["./wait-for-it.sh", "postgres:5432", "--", "npm", "start"]
-    ports:
-      - "3000:3000"
-    env_file:
-      - .env
-    environment:
-      DB_HOST: postgres
-      DB_NAME: kutt
-      DB_USER: user
-      DB_PASSWORD: pass
-      REDIS_HOST: redis
+  # kutt:
+  #   build: .
+  #   container_name: kutt
+  #   depends_on:
+  #     - postgres
+  #     - redis
+  #   ports:
+  #     - "3000:3000"
+  #   env_file: 
+  #     - .env
+  #   environment:
+  #     DB_HOST: postgres
+  #     DB_NAME: kutt
+  #     DB_USER: user
+  #     DB_PASSWORD: pass
+  #     HTTP_PROXY: http://F0373:fdctge29@proxy.gicm.net:3128/
+  #     HTTPS_PROXY: http://F0373:fdctge29@proxy.gicm.net:3128/
 
+  #   networks:
+  #     - kutt-network
+    
   redis:
-    image: redis:6.0-alpine
-    volumes:
-      - redis_data:/data
+    image: redis:alpine
+    container_name: redis
+    ports:
+      - "63793:6379"
+    networks:
+      - kutt-network
 
   postgres:
     image: postgres:12-alpine
+    container_name: postgres
     environment:
       POSTGRES_USER: user
       POSTGRES_PASSWORD: pass
-      POSTGRES_DB: kutt
+    ports:
+      - "54323:5432"
+    networks:
+      - kutt-network
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - ./postgres-data:/var/lib/postgresql/data
 
-volumes:
-  redis_data:
-  postgres_data:
+  pgadmin:
+    image: dpage/pgadmin4
+    depends_on:
+      - postgres
+    ports:
+      - "5555:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: pgadmin4@pgadmin.org
+      PGADMIN_DEFAULT_PASSWORD: admin
+    restart: unless-stopped
+    
+networks:
+  kutt-network:
+    driver: "bridge"

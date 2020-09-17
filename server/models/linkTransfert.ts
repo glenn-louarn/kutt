@@ -1,18 +1,18 @@
 import * as Knex from "knex";
 
-export async function createLinkChangeOwnersTable(knex: Knex) {
-  const hasTable = await knex.schema.hasTable("linkChangeOwners");
+export async function createLinkTransfertTable(knex: Knex) {
+  const hasTable = await knex.schema.hasTable("linkTransferts");
 
   if (!hasTable) {
-    await knex.schema.createTable("linkChangeOwners", table => {
+    await knex.schema.createTable("linkTransferts", table => {
       table.increments("id").primary();
       table
-        .integer("owner")
+        .integer("sender_id")
         .references("id")
         .inTable("users")
         .onDelete("CASCADE");
       table
-        .integer("newOwner")
+        .integer("receiver_id")
         .references("id")
         .inTable("users")
         .onDelete("CASCADE");
@@ -23,8 +23,13 @@ export async function createLinkChangeOwnersTable(knex: Knex) {
         .notNullable()
         .onDelete("CASCADE");
       table
-        .string("status") //onHold, accept, refuse
+        .string("status") //on_hold, accepted, refused, canceled
         .notNullable();
+      table
+        .string("type") // claim, give
+        .notNullable();
+      table.boolean("sender_delete").notNullable();
+      table.boolean("receiver_delete").notNullable();
       table.timestamps(false, true);
     });
   }

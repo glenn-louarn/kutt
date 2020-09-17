@@ -146,21 +146,47 @@ export const getInitStats = (): Stats => {
 };
 
 export const sanitize = {
-  domain: (domain: Domain): DomainSanitized => ({
+  domain: ({
+    uuid,
+    user_id,
+    banned_by_id,
+    ...domain
+  }: Domain): DomainSanitized => ({
     ...domain,
-    id: domain.uuid,
-    uuid: undefined,
-    user_id: undefined,
-    banned_by_id: undefined
+    id: uuid
   }),
-  link: (link: LinkJoinedDomain): LinkSanitized => ({
+  link: ({
+    banned_by_id,
+    domain_id,
+    user_id,
+    uuid,
+    password,
+    domain,
+    ...link
+  }: LinkJoinedDomain): LinkSanitized => ({
     ...link,
-    banned_by_id: undefined,
-    domain_id: undefined,
-    user_id: undefined,
-    uuid: undefined,
-    id: link.uuid,
-    password: !!link.password,
-    link: generateShortLink(link.address, link.domain)
-  })
+    id: uuid,
+    password: !!password,
+    link: generateShortLink(link.address, domain)
+  }),
+  linkTransfert: (
+    linkTransfert: LinkTransfertJoinedUserAndTarget
+  ): LinkTransfertSanitized => ({
+    ...linkTransfert,
+    target: linkTransfert.target,
+    receiver_email: linkTransfert.receiver_email,
+    sender_email: linkTransfert.sender_email
+  }) //TODO revoir
 };
+
+export const enum StatusLinkTransfert {
+  on_hold = "on_hold",
+  accepted = "accepted",
+  refused = "refused",
+  canceled = "canceled"
+}
+
+export const enum TypeLinkTransfert {
+  give = "give",
+  claim = "claim"
+}

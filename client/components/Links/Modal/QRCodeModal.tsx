@@ -9,13 +9,13 @@ import { RowCenter } from "../../Layout";
 type Props = {
   link: LinkType;
   showModal: boolean;
-  closeModal: Function;
+  setModal: Function;
 }
 
 const QRCodeLink = ({
   link,
   showModal,
-  closeModal
+  setModal
 }: Props) => {
 
   return (
@@ -23,7 +23,7 @@ const QRCodeLink = ({
       id="table-qrcode-modal"
       minWidth="max-content"
       show={showModal}
-      closeHandler={() => closeModal(false)}
+      closeHandler={() => setModal(false)}
     >
       <RowCenter width={192}>
         <QRCode size={192} value={link.link} />

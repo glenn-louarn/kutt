@@ -25,13 +25,13 @@ interface BanForm {
 type Props = {
   link: LinkType;
   showModal: boolean;
-  closeModal: Function;
+  setModal: Function;
 }
 
 const BanLink = ({
   link,
   showModal,
-  closeModal
+  setModal
 }: Props) => {
   const theme = useTheme()
   const { t } = useTranslation();
@@ -47,7 +47,7 @@ const BanLink = ({
       const res = await ban({ id: link.id, ...banFormState.values });
       setBanMessage(res.message, "green");
       setTimeout(() => {
-        closeModal(false)
+        setModal(false)
         // setBanModal(false);
       }, 2000);
     } catch (err) {
@@ -59,7 +59,7 @@ const BanLink = ({
     <Modal
       id="table-ban-modal"
       show={showModal}
-      closeHandler={() => closeModal(false)}
+      closeHandler={() => setModal(false)}
     >
       <>
         <H2 mb={24} textAlign="center" bold>
@@ -85,7 +85,7 @@ const BanLink = ({
             </Text>
           ) : (
                 <>
-                  <Button color="default" mr={3} onClick={() => closeModal(false)}>
+                  <Button color="default" mr={3} onClick={() => setModal(false)}>
                     {t('button.cancel')}
                   </Button>
                   <Button color="warning" ml={3} onClick={onBan}>

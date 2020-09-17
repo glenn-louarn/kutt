@@ -27,7 +27,7 @@ const AppWrapper = ({ children }: { children: any }) => {
   const fetched = useStoreState(s => s.settings.fetched);
   const loading = useStoreState(s => s.loading.loading);
   const getSettings = useStoreActions(s => s.settings.getSettings);
-
+ 
   useEffect(() => {
     if (isAuthenticated && !fetched) {
       getSettings().catch(() => logout());
