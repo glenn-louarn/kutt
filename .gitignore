@@ -12,3 +12,4 @@ dump.rdb
 docs/api/*.js
 docs/api/static
 customTheme.ts
+postgres-data

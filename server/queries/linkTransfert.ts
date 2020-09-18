@@ -1,4 +1,4 @@
-import { CustomError } from "../utils";
+import { CustomError, StatusLinkTransfert, TypeLinkTransfert } from "../utils";
 import knex from "../knex";
 
 interface Create {
