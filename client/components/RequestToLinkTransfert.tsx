@@ -23,16 +23,16 @@ const RequestToLinkTransfert = () => {
   }
   
   useEffect(() => {
-    if(linkTransferts && linkTransferts[0]){
+    if(linkTransferts && linkTransferts[0] && linkTransferts[0].status === "on_hold" ){
       setShowModal(true)
     }
   }, [linkTransferts])
 
   return (
     <>
-      {linkTransferts && linkTransferts[0] !== undefined && (
+      {linkTransferts && linkTransferts[0] !== undefined && linkTransferts[0].status === "on_hold" &&(
         < NotificationPopUp
-          notificationText={"Jean would like to give you ownership of the links " + linkTransferts[0].id}
+          notificationText={linkTransferts[0].sender.email + " would like to give you ownership of the links " + linkTransferts[0].link.address}
           showModal={showModal}
           onAccept={onAccept}
           onRefuse={onRefuse}

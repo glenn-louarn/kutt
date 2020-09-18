@@ -35,6 +35,11 @@ const normalizeMatch = (match: Partial<Link>): Partial<Link> => {
     delete newMatch.user_id;
   }
 
+  if (newMatch.id) {
+    newMatch["links.id"] = newMatch.id;
+    delete newMatch.id;
+  }
+
   if (newMatch.uuid) {
     newMatch["links.uuid"] = newMatch.uuid;
     delete newMatch.uuid;

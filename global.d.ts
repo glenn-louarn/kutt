@@ -27,6 +27,10 @@ interface UserJoined extends User {
   domain?: string;
   domain_id?: number;
 }
+interface UserInfo {
+  id : number;
+  email : string;
+}
 
 interface Domain {
   id: number;
@@ -69,10 +73,10 @@ interface LinkTransfert {
   receiver_delete: boolean;
   sender_delete: boolean;
 }
-interface LinkTransfertJoinedUserAndTarget extends LinkTransfert {
-  target?: string;
-  receiver_email?: string;
-  sender_email?: string;
+interface LinkTransfertJoinedLinkAndUser extends LinkTransfert {
+  link?: Link;
+  receiver?: User;
+  sender?: User;
 }
 interface LinkTransfertSanitized {
   id: number;
@@ -81,11 +85,13 @@ interface LinkTransfertSanitized {
   link_id: number;
   type: string;
   status: string;
-  target?: string;
+  link: LinkSanitized;
   receiver_email?: string;
   sender_email?: string;
-
+  receiver : UserInfo;
+  sender: UserInfo;
 }
+
 interface IP {
   id: number;
   created_at: string;

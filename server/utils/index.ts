@@ -169,13 +169,19 @@ export const sanitize = {
     password: !!password,
     link: generateShortLink(link.address, domain)
   }),
-  linkTransfert: (
-    linkTransfert: LinkTransfertJoinedUserAndTarget
-  ): LinkTransfertSanitized => ({
+  user: ({ id, email, ...user }: User): UserInfo => ({
+    id,
+    email
+  }),
+  linkTransfert: ({
+    receiver_delete,
+    sender_delete,
+    ...linkTransfert
+  }: LinkTransfertJoinedLinkAndUser): LinkTransfertSanitized => ({
     ...linkTransfert,
-    target: linkTransfert.target,
-    receiver_email: linkTransfert.receiver_email,
-    sender_email: linkTransfert.sender_email
+    link: sanitize.link(linkTransfert.link),
+    receiver: sanitize.user(linkTransfert.receiver),
+    sender: sanitize.user(linkTransfert.sender)
   }) //TODO revoir
 };
 

@@ -1,9 +1,21 @@
 import { Handler } from "express";
 import query from "../queries";
 import knex from "../knex";
-import { CustomError, TypeLinkTransfert, StatusLinkTransfert } from "../utils";
+import {
+  CustomError,
+  TypeLinkTransfert,
+  StatusLinkTransfert,
+  sanitize
+} from "../utils";
 
 // import * as utils from "../utils";s
+
+const linkTransfertJoinLinkAndUser = async (linkTransfert: LinkTransfert) => {
+  const link = await query.link.find({ id: linkTransfert.link_id });
+  const receiver = await query.user.find({ id: linkTransfert.receiver_id });
+  const sender = await query.user.find({ id: linkTransfert.sender_id });
+  return { ...linkTransfert, link, receiver, sender };
+};
 
 export const get: Handler = async (req, res) => {
   //TODO ne pas renvoyer les liens delete soft
@@ -15,7 +27,13 @@ export const get: Handler = async (req, res) => {
   const match2 = { sender_id: user_id };
   const linkTransfertClaim = await query.linkTransfert.get(match2);
   // TODO prendre en compte plusieurs demande pagination
-  return res.status(200).send({ ...linkTransfertGive, ...linkTransfertClaim });
+  const linkTransferts = [...linkTransfertGive, ...linkTransfertClaim];
+
+  const linkTransfertJoinLinkAndUsers = await Promise.all(
+    linkTransferts.map(linkTransfertJoinLinkAndUser)
+  );
+  const data = linkTransfertJoinLinkAndUsers.map(sanitize.linkTransfert);
+  return res.status(200).send(data);
 };
 const createClaimLinkTransfert = async req => {
   const { link_id } = req.body;

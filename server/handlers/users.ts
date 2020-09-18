@@ -18,7 +18,7 @@ export const getAll = async (req, res) => {
   const users = await query.user.getAll({ limit, skip });
   const data = [];
   users.forEach(user => {
-    data.push({ id: user.id, email: user.email });
+    data.push(utils.sanitize.user(user));
   });
   return res.status(200).send({
     limit,
