@@ -52,8 +52,6 @@ export const linkTransferts: LinkTransferts = {
   total: 0,
   loading: true,
   get: thunk(async (actions, payload) => {
-    console.log("JE  SUIS appelé")
-    console.log("getAxiosConfig()=====++++123+> ",getAxiosConfig())
     const res = await axios.get(APIv2.LinkTransferts,getAxiosConfig());
     actions.set(res.data);
     return res.data;
@@ -74,13 +72,11 @@ export const linkTransferts: LinkTransferts = {
     actions.update(res.data);
   }),
   update: action((state, payload) => {
-    console.log("state.items====================+++++>  ",state.items)
-    // state.items = state.items.map(item =>
-    //   item.id === payload.id ? { ...item, ...payload } : item
-    // );
+    state.items = state.items.map(item =>
+      item.id === payload.id ? { ...item, ...payload } : item
+    );
   }),
   set: action((state, payload) => {
-    console.log("SET data =++++++++++++++++++++++> ",payload.data)
     state.items = payload.data;
   })
 

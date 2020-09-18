@@ -7,7 +7,6 @@ import { Link as LinkType } from "../../../store/links";
 import {   Select } from "../../Input";
 import Text, { H2, Span } from "../../Text";
 import Modal from "../../Modal";
-import { useTranslation } from 'react-i18next';
 import { Flex } from "reflexbox";
 import { Button } from "../../Button";
 import Icon from "../../Icon";
@@ -32,7 +31,6 @@ const LinkTransfertModal = ({
   const [message, setMessage] = useMessage();
 
   const theme = useTheme()
-  const { t } = useTranslation();
 
   useEffect(() => {
     if (showModal) {
@@ -105,7 +103,7 @@ const LinkTransfertModal = ({
                       mr={3}
                       onClick={() => setModal(false)}
                     >
-                      {t('button.cancel')}
+                      Cancel
                     </Button>
                     <Button color="warning" ml={3} onClick={onTransfert}>
                       Change owner

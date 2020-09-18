@@ -15,10 +15,6 @@ export const get: Handler = async (req, res) => {
   const match2 = { sender_id: user_id };
   const linkTransfertClaim = await query.linkTransfert.get(match2);
   // TODO prendre en compte plusieurs demande pagination
-  console.log("linkTransfertClaim=================================+++> ", {
-    ...linkTransfertGive,
-    ...linkTransfertClaim
-  });
   return res.status(200).send({ ...linkTransfertGive, ...linkTransfertClaim });
 };
 const createClaimLinkTransfert = async req => {

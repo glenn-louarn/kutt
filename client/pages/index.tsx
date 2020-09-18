@@ -37,8 +37,5 @@ const Homepage = () => {
   );
 };
 
-Homepage.getInitialProps = async () => {
-
-}
 
 export default Homepage;
